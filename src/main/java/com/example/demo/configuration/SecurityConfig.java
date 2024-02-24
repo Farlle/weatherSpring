@@ -28,24 +28,23 @@ import javax.servlet.Filter;
 @AllArgsConstructor
 public class SecurityConfig {
 
-
     private JwtAuthFilter authFilter;
     private UserInfoDetailService userInfoDetailService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-       return http.csrf().disable()
-               .authorizeHttpRequests()
-               .antMatchers("/auth/new").permitAll()
-               .and()
-               .authorizeHttpRequests().antMatchers("/wet/**")
-               .authenticated().and()
-               .sessionManagement()
-               .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-               .and()
-               .authenticationProvider(authenticationProvider())
-               .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
-               .build();
+        return http.csrf().disable()
+                .authorizeHttpRequests()
+                .antMatchers("/auth/new").permitAll()
+                .and()
+                .authorizeHttpRequests().antMatchers("/wet/**")
+                .authenticated().and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean

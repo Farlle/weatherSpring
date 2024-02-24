@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoder;
@@ -9,13 +10,42 @@ import io.micrometer.core.instrument.config.validate.Validated;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+
+import static java.security.KeyRep.Type.SECRET;
 
 @Service
 public class JwtService {
+
+    public static final String SECRET ="3489756329876298374568239475623897465";
+
+    public String extractUserName(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaim(token);
+        return claimsResolver.apply(claims);
+        
+    }
+
+    private Claims extractAllClaim(String token) {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 
     private String createToken(Map<String, Object> claims, String userName) {
         return Jwts.builder()
@@ -27,7 +57,7 @@ public class JwtService {
 
     }
 
-    private SignatureAlgorithm getSignKey() {
+    private Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -43,7 +73,7 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        return extract
+        return extractExpiration(token).before(new Date());
     }
 
 }
