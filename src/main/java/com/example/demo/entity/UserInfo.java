@@ -1,18 +1,26 @@
 package com.example.demo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.stereotype.Component;
 
-@Data
+@Component
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class UserInfo {
-
     private int id;
     private String name;
-    private String email;
+    private String login;
     private String password;
     private String role;
 
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLogin() {
+        return login;
+    }
 }
