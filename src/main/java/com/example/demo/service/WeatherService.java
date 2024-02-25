@@ -20,7 +20,8 @@ public class WeatherService {
     public String getTemp() {
         RestTemplate restTemplate = new RestTemplate();
         var body = restTemplate
-        .getForEntity(HTTPS_API_TOMORROW + "?" + LOCATION + "&apikey=" + APIKEY, String.class).getBody();
+                .getForEntity(HTTPS_API_TOMORROW + "?" + LOCATION
+                        + "&apikey=" + APIKEY, String.class).getBody();
 
         return mapper.mapWeatherResponse(body).toString();
     }

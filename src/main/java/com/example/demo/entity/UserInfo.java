@@ -15,7 +15,6 @@ public class UserInfo {
     private String password;
     private String role;
 
-
     public String getName() {
         return name;
     }

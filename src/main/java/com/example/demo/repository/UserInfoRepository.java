@@ -13,32 +13,27 @@ import java.util.*;
 public class UserInfoRepository {
 
     private HashMap<Integer, UserInfo> userInfoMap = new HashMap<>();
-
-  //  private List<UserInfo> userInfos = new ArrayList<>();
     private int id = 0;
+
     {
-        userInfoMap.put(id++,new UserInfo(id++,"Sashok", "gav@", "123","Kryt"));
-        userInfoMap.put(id++,new UserInfo(id++,"Dimas", "mya@", "123","Kryt"));
-        userInfoMap.put(id++,new UserInfo(id++,"Oleg", "you@", "123","Kryt"));
+        userInfoMap.put(id++, new UserInfo(id++, "Sashok", "gav@", "123", "Kryt"));
+        userInfoMap.put(id++, new UserInfo(id++, "Dimas", "mya@", "123", "Kryt"));
+        userInfoMap.put(id++, new UserInfo(id++, "Oleg", "you@", "123", "Kryt"));
 
     }
-
 
     public void createUserInfo(UserInfo user) {
-        userInfoMap.put(id++,user);
+        userInfoMap.put(id++, user);
     }
 
-    public UserInfo getById(){
-
+    public UserInfo getById() {
         return userInfoMap.values().stream()
                 .filter(x -> x.getId() == id)
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Employee with id " + id + " not found"));
     }
 
-
     public UserInfo getByUsername(String name) {
-
         return userInfoMap.values().stream()
                 .filter(userInfo -> userInfo.getName().equals(name))
                 .findFirst()

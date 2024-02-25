@@ -11,6 +11,4 @@ public class WeatherResponse {
     private double avgTempMin;
     private double avgTempHour;
     private double avgTempDay;
-
-
 }

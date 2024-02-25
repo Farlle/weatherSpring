@@ -17,8 +17,8 @@ public class WeatherController {
     }
 
     @GetMapping("/wet")
-    public String getWeather(){
-        String str =  weatherService.getTemp();
+    public String getWeather() {
+        String str = weatherService.getTemp();
         return str;
     }
 

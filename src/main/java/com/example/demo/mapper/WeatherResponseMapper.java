@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 public class WeatherResponseMapper {
     private final ObjectMapper jsonParser = new ObjectMapper();
 
-
     @SneakyThrows
     public WeatherResponse mapWeatherResponse(String str) {
         JsonNode jsonNode = jsonParser.readTree(str);
@@ -26,9 +25,7 @@ public class WeatherResponseMapper {
         String lat = jsonNode.get("location").get("lat").toString();
         String lon = jsonNode.get("location").get("lon").toString();
 
-
         return new Location(lat, lon);
-
     }
 
     private double getAvgTemper(JsonNode jsonNode, String range, String nodeName) {
