@@ -46,24 +46,24 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
-    public Map<String, String> authenticateUser(@RequestBody AuthRequest authRequest) {
+    public Map<String, String> authenticateUser(@RequestBody AuthRequest authRequest) throws Exception {
         UsernamePasswordAuthenticationToken authInputToken =
                 new UsernamePasswordAuthenticationToken(authRequest.getName(),
                         authRequest.getPassword());
         try {
             authenticationManager.authenticate(authInputToken);
         } catch (BadCredentialsException e) {
-            System.out.println("Неверные учетные данные" + e.getMessage());
+            throw new Exception("Неверные учетные данные " + e.getMessage());
         } catch (LockedException e) {
-            System.out.println("Пользователь заблокирован" + e.getMessage());
+            throw new Exception("Пользователь заблокирован " + e.getMessage());
         } catch (DisabledException e) {
-            System.out.println("Пользователь отключен" + e.getMessage());
+            throw new Exception("Пользователь отключен " + e.getMessage());
         } catch (AccountExpiredException e) {
-            System.out.println("Срок действия учетной записи истек" + e.getMessage());
+            throw new Exception("Срок действия учетной записи истек " + e.getMessage());
         } catch (CredentialsExpiredException e) {
-            System.out.println("Срок действия учетных данных истек" + e.getMessage());
+           throw new Exception("Срок действия учетных данных истек " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Внутренняя ошибка сервера в контроллере " + e.getMessage());
+            throw new Exception("Внутренняя ошибка сервера в контроллере " +e.getMessage());
         }
         String token = jwtService.generateToken(authRequest.getName());
         return Map.of("token", token);
