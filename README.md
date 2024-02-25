@@ -21,6 +21,9 @@ json для аутентификации
 
 
 адреса 
+
     для создания юзера http://localhost:8080/auth/new
+    
     для аутентификации http://localhost:8080/auth/authenticate
+    
     для погоды http://localhost:8080/wet
