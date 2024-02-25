@@ -25,14 +25,7 @@ public class UserInfoRepository {
     public void createUserInfo(UserInfo user) {
         userInfoMap.put(id++, user);
     }
-
-    public UserInfo getById() {
-        return userInfoMap.values().stream()
-                .filter(x -> x.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Employee with id " + id + " not found"));
-    }
-
+    
     public UserInfo getByUsername(String name) {
         return userInfoMap.values().stream()
                 .filter(userInfo -> userInfo.getName().equals(name))

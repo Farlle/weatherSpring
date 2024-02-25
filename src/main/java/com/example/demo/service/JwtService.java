@@ -52,6 +52,7 @@ public class JwtService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 300000))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
+
     }
 
     private Key getSignKey() {

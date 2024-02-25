@@ -2,11 +2,13 @@ package com.example.demo.filter;
 
 import com.example.demo.configuration.UserInfoDetailService;
 import com.example.demo.configuration.UserInfoUserDetails;
+import com.example.demo.entity.UserInfo;
 import com.example.demo.repository.UserInfoRepository;
 import com.example.demo.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +37,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private UserInfoRepository userInfoRepository;
 
+    @SneakyThrows
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -44,35 +47,39 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        String jwtToken = authHeader.substring(7);
+        String token = authHeader.substring(7);
 
-        if (jwtToken != null && jwtService.validateToken(jwtToken,
-                new UserInfoUserDetails(userInfoRepository.getByUsername(getNameJwt(jwtToken))))) {
+        if (token != null && jwtService.validateToken(token,
+                new UserInfoUserDetails(getUserInfoFromRepo(token)))) {
 
-            String username = jwtService.extractUserName(jwtToken);
+            String username = jwtService.extractUserName(token);
             UserDetails userDetails = userInfoDetailService.loadUserByUsername(username);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, userDetails.isEnabled(), userDetails.getAuthorities());
+                    userDetails, userDetails.getPassword(), userDetails.getAuthorities());
 
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
-
+        } else {
+            System.out.println("token error");
         }
     }
 
-    private String getNameJwt(String jwtToken) {
+    private UserInfo getUserInfoFromRepo(String jwtToken) throws Exception {
         try {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(SECRET)
                     .build()
                     .parseClaimsJws(jwtToken)
                     .getBody();
-            return claims.getSubject();
+
+            var name = claims.getSubject();
+            return userInfoRepository.getByUsername(name);
+
         } catch (JwtException e) {
-            return String.valueOf(new Exception(e));
+            throw new Exception("Error" + e.getMessage());
         }
     }
 }
