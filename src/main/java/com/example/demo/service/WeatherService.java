@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.WeatherResponse;
 import com.example.demo.mapper.WeatherResponseMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
