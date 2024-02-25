@@ -16,7 +16,6 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
     private final UserInfoRepository userInfoRepository;
     private final JwtService jwtService;
@@ -55,15 +54,15 @@ public class AuthController {
         try {
             authenticationManager.authenticate(authInputToken);
         } catch (BadCredentialsException e) {
-            System.out.println("Неверные учетные данные");
+            System.out.println("Неверные учетные данные"+ e.getMessage());
         } catch (LockedException e) {
             System.out.println("Пользователь заблокирован" + e.getMessage());
         } catch (DisabledException e) {
-            System.out.println("Пользователь отключен");
+            System.out.println("Пользователь отключен" + e.getMessage());
         } catch (AccountExpiredException e) {
-            System.out.println("Срок действия учетной записи истек");
+            System.out.println("Срок действия учетной записи истек"+ e.getMessage());
         } catch (CredentialsExpiredException e) {
-            System.out.println("Срок действия учетных данных истек");
+            System.out.println("Срок действия учетных данных истек"+ e.getMessage());
         } catch (Exception e) {
             System.out.println("Внутренняя ошибка сервера в контроллере " + e.getMessage());
         }

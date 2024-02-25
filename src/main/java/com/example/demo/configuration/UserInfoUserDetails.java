@@ -1,7 +1,9 @@
 package com.example.demo.configuration;
 
 import com.example.demo.entity.UserInfo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,26 +20,38 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @Component
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserInfoUserDetails implements UserDetails {
-    @Autowired
-    private UserInfo userInfo;
 
     private String name;
     private String password;
     private List<GrantedAuthority> authorities;
 
+    public UserInfoUserDetails(UserInfo userInfo){
+        name = userInfo.getName();
+        password = userInfo.getPassword();
+        authorities = Arrays.stream(userInfo.getRole().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    public UserInfoUserDetails(String subject) {
+        name = subject;
+    }
+
    /* public UserInfoUserDetails(UserInfo userInfo) {
         this.userInfo = userInfo;
     }*/
 
-    public UserInfoUserDetails(UserInfo userInfo){
-       // this.userInfo = userInfo;
-        name = userInfo.getName();
-        password = userInfo.getPassword();
-//        authorities = Arrays.stream(userInfo.getRole().split(","))
-//                .map(SimpleGrantedAuthority::new)
-//                .collect(Collectors.toList());
-    }
+//    public UserInfoUserDetails(UserInfo userInfo){
+//       // this.userInfo = userInfo;
+//        name = userInfo.getName();
+//        password = userInfo.getPassword();
+////        authorities = Arrays.stream(userInfo.getRole().split(","))
+////                .map(SimpleGrantedAuthority::new)
+////                .collect(Collectors.toList());
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -46,12 +60,12 @@ public class UserInfoUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userInfo.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return userInfo.getName();
+        return name;
     }
 
     @Override
