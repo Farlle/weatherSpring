@@ -18,7 +18,6 @@ public class WeatherService {
     WeatherResponseMapper mapper;
 
     public String getTemp() {
-        System.out.println("zaxodim v pogody");
         RestTemplate restTemplate = new RestTemplate();
         var body = restTemplate
         .getForEntity(HTTPS_API_TOMORROW + "?" + LOCATION + "&apikey=" + APIKEY, String.class).getBody();

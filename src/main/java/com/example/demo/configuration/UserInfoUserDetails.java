@@ -40,19 +40,6 @@ public class UserInfoUserDetails implements UserDetails {
         name = subject;
     }
 
-   /* public UserInfoUserDetails(UserInfo userInfo) {
-        this.userInfo = userInfo;
-    }*/
-
-//    public UserInfoUserDetails(UserInfo userInfo){
-//       // this.userInfo = userInfo;
-//        name = userInfo.getName();
-//        password = userInfo.getPassword();
-////        authorities = Arrays.stream(userInfo.getRole().split(","))
-////                .map(SimpleGrantedAuthority::new)
-////                .collect(Collectors.toList());
-//    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

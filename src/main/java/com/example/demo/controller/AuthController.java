@@ -16,6 +16,7 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
+    @Autowired
     private PasswordEncoder passwordEncoder;
     private final UserInfoRepository userInfoRepository;
     private final JwtService jwtService;
@@ -29,8 +30,6 @@ public class AuthController {
         this.userInfoRepository = userInfoRepository;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
-        System.out.println("1231231233123123");
-
     }
 
     @PostMapping("/new")
@@ -42,12 +41,11 @@ public class AuthController {
 
         userInfoRepository.createUserInfo(userInfo);
         String token = jwtService.generateToken(userInfo.getLogin());
-        return Map.of("jwt-token", token);
+        return Map.of("token", token);
     }
 
     @PostMapping("/authenticate")
     public Map<String, String> authenticateUser(@RequestBody AuthRequest authRequest) {
-        System.out.println(authRequest.getName() + "     " +authRequest.getPassword());
         UsernamePasswordAuthenticationToken authInputToken =
                 new UsernamePasswordAuthenticationToken(authRequest.getName(),
                         authRequest.getPassword());
@@ -67,7 +65,7 @@ public class AuthController {
             System.out.println("Внутренняя ошибка сервера в контроллере " + e.getMessage());
         }
         String token = jwtService.generateToken(authRequest.getName());
-        return Map.of("jwt-token", token);
+        return Map.of("token", token);
     }
 
 }

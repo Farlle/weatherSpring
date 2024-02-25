@@ -2,8 +2,10 @@ package com.example.demo.filter;
 
 import com.example.demo.configuration.UserInfoDetailService;
 import com.example.demo.configuration.UserInfoUserDetails;
+import com.example.demo.repository.UserInfoRepository;
 import com.example.demo.service.JwtService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,9 +37,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private UserInfoUserDetails userInfoUserDetails;
     @Autowired
     private UserInfoDetailService userInfoDetailService;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || authHeader.isBlank() || !authHeader.startsWith("Bearer ")) {
@@ -46,21 +51,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         String jwtToken = authHeader.substring(7);
 
+        if (jwtToken != null && jwtService.validateToken(jwtToken,
+                new UserInfoUserDetails(userInfoRepository.getByUsername(getNameJwt(jwtToken))))) {
 
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(SECRET)
-                .build()
-                .parseClaimsJws(jwtToken)
-                .getBody();
-
-
-        if (jwtToken.isBlank()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Токен пуст");
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        if (jwtToken != null && jwtService.validateToken(jwtToken, new UserInfoUserDetails(claims.getSubject()))) {
             String username = jwtService.extractUserName(jwtToken);
             UserDetails userDetails = userInfoDetailService.loadUserByUsername(username);
 
@@ -72,20 +65,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
 
-        } else {
-            System.out.println("вылетаем");
-
         }
     }
 
 
-    private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
+    private String getNameJwt(String jwtToken) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(SECRET)
+                    .build()
+                    .parseClaimsJws(jwtToken)
+                    .getBody();
+            return claims.getSubject();
+        } catch (JwtException e) {
+            return String.valueOf(new Exception(e));
         }
-
-        return null;
     }
 }
