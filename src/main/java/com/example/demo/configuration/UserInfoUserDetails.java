@@ -33,6 +33,7 @@ public class UserInfoUserDetails implements UserDetails {
         authorities = Arrays.stream(userInfo.getRole().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+        System.out.println(authorities);
     }
 
     public UserInfoUserDetails(String subject) {
@@ -41,7 +42,7 @@ public class UserInfoUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return authorities;
     }
 
     @Override
