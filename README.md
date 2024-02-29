@@ -1,29 +1,5 @@
 # weatherSpring
 
-json для создания нового юзера
+в ветке master задание с практик
 
-
-
-
-    "name": "john doe",
-    "login": "johndoeq",
-    "password": "password123",
-    "role": "user" 
-
-
-
-json для аутентификации
-
-
-
-    "name": "john doe",
-    "password": "password123"   
-
-
-адреса 
-
-    для создания юзера http://localhost:8080/auth/new
-    
-    для аутентификации http://localhost:8080/auth/authenticate
-    
-    для погоды http://localhost:8080/wet
+в ветке jwtReg дз по security, реализована аутентификация по jwt, токен живет 10 минут. Тестирование проводилось через insomnia, в папке resources файл с запросами для теста
