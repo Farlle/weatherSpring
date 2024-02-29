@@ -61,9 +61,9 @@ public class AuthController {
         } catch (AccountExpiredException e) {
             throw new Exception("Срок действия учетной записи истек " + e.getMessage());
         } catch (CredentialsExpiredException e) {
-           throw new Exception("Срок действия учетных данных истек " + e.getMessage());
+            throw new Exception("Срок действия учетных данных истек " + e.getMessage());
         } catch (Exception e) {
-            throw new Exception("Внутренняя ошибка сервера в контроллере " +e.getMessage());
+            throw new Exception("Внутренняя ошибка сервера в контроллере " + e.getMessage());
         }
         String token = jwtService.generateToken(authRequest.getName());
         return Map.of("token", token);

@@ -12,7 +12,7 @@ public class InfoController {
     @GetMapping("/hello")
     @ResponseBody
     @PreAuthorize("hasRole('ROLE_USER')")
-    public String sayHello(){
+    public String sayHello() {
         return "{\"message\": \"Hello User!\"}";
     }
 

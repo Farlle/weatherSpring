@@ -25,7 +25,7 @@ public class UserInfoRepository {
     public void createUserInfo(UserInfo user) {
         userInfoMap.put(id++, user);
     }
-    
+
     public UserInfo getByUsername(String name) {
         return userInfoMap.values().stream()
                 .filter(userInfo -> userInfo.getName().equals(name))
